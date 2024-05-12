@@ -28,4 +28,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+try
+{
+    DbInitialSeeder.DbInitDb(app);
+}
+catch (Exception e)
+{
+
+	Console.WriteLine(e.Message);
+}
 app.Run();

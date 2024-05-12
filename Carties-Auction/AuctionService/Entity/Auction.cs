@@ -10,9 +10,9 @@ namespace AuctionService.Entity
         public string? Winner { get; set; }
         public int? CurrentHighBid { get; set; }
         public int? SoldAmount { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public DateTime AuctionEnd { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime AuctionEnd { get; set; } = DateTime.UtcNow;
         public Status Status { get; set; }
         public Item? Item { get; set; }
     }
