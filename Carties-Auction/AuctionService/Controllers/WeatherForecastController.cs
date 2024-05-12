@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Carties_Auction.Controllers
+namespace AuctionService.Controllers
 {
     [ApiController]
     [Route("[controller]")]

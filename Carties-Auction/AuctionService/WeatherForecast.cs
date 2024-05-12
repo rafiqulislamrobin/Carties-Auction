@@ -1,4 +1,4 @@
-namespace Carties_Auction
+namespace AuctionService
 {
     public class WeatherForecast
     {

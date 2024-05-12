@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionService", "Carties-Auction\AuctionService.csproj", "{224C43F5-29BE-4DD8-9A31-2F4F93FF66EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionService", "AuctionService\AuctionService.csproj", "{7260CA19-81B1-4B65-B198-B36DBBD7291F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3895A2AB-DA85-487D-8211-0BCEC4FBEC5B}"
+	ProjectSection(SolutionItems) = preProject
+		Docker-compose.yml = Docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +16,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{224C43F5-29BE-4DD8-9A31-2F4F93FF66EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{224C43F5-29BE-4DD8-9A31-2F4F93FF66EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{224C43F5-29BE-4DD8-9A31-2F4F93FF66EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{224C43F5-29BE-4DD8-9A31-2F4F93FF66EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7260CA19-81B1-4B65-B198-B36DBBD7291F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7260CA19-81B1-4B65-B198-B36DBBD7291F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7260CA19-81B1-4B65-B198-B36DBBD7291F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7260CA19-81B1-4B65-B198-B36DBBD7291F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {426AD12F-6763-41B1-A5EB-46D8558D2B68}
+		SolutionGuid = {0AA33616-782E-48E8-9A80-35B9A70267A5}
 	EndGlobalSection
 EndGlobal
