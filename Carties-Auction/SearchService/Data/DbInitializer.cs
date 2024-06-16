@@ -11,10 +11,10 @@ public class DbInitializer
 
     public static async Task InitDb(WebApplication app)
     {
-        var x = app.Configuration.GetConnectionString("MongoDbConnection");
+        var connection = app.Configuration.GetConnectionString("MongoDbConnection");
         // Initialize the database connection
         await DB.InitAsync("SearchDb", MongoClientSettings
-                        .FromConnectionString(x));
+                        .FromConnectionString(connection));
 
         // Ensure that the indexes are created
         await DB.Index<Item>()

@@ -100,8 +100,7 @@ namespace AuctionService.Controllers
             auction.Item!.Details = auctionDto.Details ?? auction.Item.Details;
             auction.Item!.Year = auctionDto.Year ?? auction.Item.Year;
 
-            var x =_mapper.Map<AuctionUpdated>(auction);
-            await _publishEndpoint.Publish(x);
+            await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
 
             var result = await _auctionDbContext.SaveChangesAsync() > 0;
 
