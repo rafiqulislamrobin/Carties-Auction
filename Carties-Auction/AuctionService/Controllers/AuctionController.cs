@@ -63,6 +63,7 @@ namespace AuctionService.Controllers
         [HttpPost]
         public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
         {
+            
             var auction = _mapper.Map<Auction>(auctionDto);
 
             //TODO: add current user and as seller
@@ -86,39 +87,42 @@ namespace AuctionService.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<AuctionDto>> UpdateAuction(Guid id, UpdateAuctionDto auctionDto)
         {
-            var auciton = await _auctionDbContext.Auctions.Include(x =>x.Item)
+            var auction = await _auctionDbContext.Auctions.Include(x =>x.Item)
                 .FirstOrDefaultAsync(x =>x.Id == id);
 
-            if (auciton == null) return NotFound();
+            if (auction == null) return NotFound();
 
             //TODO: check seller == username
 
-            auciton.Item!.Make = auctionDto.make ?? auciton.Item.Make;
-            auciton.Item!.Model = auctionDto.Model ?? auciton.Item.Model;
-            auciton.Item!.Color = auctionDto.Color ?? auciton.Item.Color;
-            auciton.Item!.Details = auctionDto.Details ?? auciton.Item.Details;
-            auciton.Item!.Year = auctionDto.Year ?? auciton.Item.Year;
+            auction.Item!.Make = auctionDto.make ?? auction.Item.Make;
+            auction.Item!.Model = auctionDto.Model ?? auction.Item.Model;
+            auction.Item!.Color = auctionDto.Color ?? auction.Item.Color;
+            auction.Item!.Details = auctionDto.Details ?? auction.Item.Details;
+            auction.Item!.Year = auctionDto.Year ?? auction.Item.Year;
+
+            var x =_mapper.Map<AuctionUpdated>(auction);
+            await _publishEndpoint.Publish(x);
 
             var result = await _auctionDbContext.SaveChangesAsync() > 0;
 
+            if (result) return Ok();
 
-            if (result)
-                return Ok("Updated Successfully");
-
-            return BadRequest("Fail to update");
+            return BadRequest("Problem saving changes");
         }
 
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAuction(Guid id)
         {
-            var auciton = await _auctionDbContext.Auctions.FindAsync(id);
+            var auction = await _auctionDbContext.Auctions.FindAsync(id);
 
-            if (auciton == null) return NotFound();
+            if (auction == null) return NotFound();
 
             //TODO: check seller == username
 
-            _auctionDbContext.Auctions.Remove(auciton);
+            _auctionDbContext.Auctions.Remove(auction);
+
+            await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
 
             var result = await _auctionDbContext.SaveChangesAsync() > 0;
 
