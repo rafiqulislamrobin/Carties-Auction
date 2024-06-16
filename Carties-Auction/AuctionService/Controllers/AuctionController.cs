@@ -2,6 +2,9 @@ using AuctionService.Data;
 using AuctionService.DTOs;
 using AuctionService.Entity;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,24 +17,35 @@ namespace AuctionService.Controllers
         private readonly ILogger<AuctionController> _logger;
         private readonly AuctionDbContext _auctionDbContext;
         private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public AuctionController(ILogger<AuctionController> logger, AuctionDbContext auctionDbContext, IMapper mapper)
+        public AuctionController(ILogger<AuctionController> logger, AuctionDbContext auctionDbContext, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _logger = logger;
             _auctionDbContext = auctionDbContext;
             _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet(Name = "GetAuctions")]
-        public async Task<ActionResult<List<AuctionDto>>> GetAuctions()
+        public async Task<ActionResult<List<AuctionDto>>> GetAuctions(string? date)
         {
-            var auction = await _auctionDbContext.Auctions
-                .Include(x =>x.Item)
-                .OrderBy(x =>x.Item.Make)
-                .ToListAsync();
+            var query = _auctionDbContext.Auctions.OrderBy(x =>x.Item.Make).AsQueryable();
+            if (!string.IsNullOrEmpty(date))
+            {
+                query = query.Where(x => x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
+            }
+            var result = await query.ProjectTo<AuctionDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return result;
+           //var auction = await _auctionDbContext.Auctions
+           //     .Include(x =>x.Item)
+           //     .OrderBy(x =>x.Item.Make)
+           //     .ToListAsync();
 
-            return _mapper.Map<List<AuctionDto>>(auction);
+           // return _mapper.Map<List<AuctionDto>>(auction);
         }
+
+       
 
         [HttpGet("{id}")]
         public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id)
@@ -55,6 +69,10 @@ namespace AuctionService.Controllers
             auction.Seller = "test";
 
             _auctionDbContext.Add(auction);
+            ///if rabbitmq failed then transaction will be cancalled
+            var newAuction = _mapper.Map<AuctionDto>(auction);
+            await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
+
             var result = await _auctionDbContext.SaveChangesAsync() > 0;
 
             if (!result)
