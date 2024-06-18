@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,14 +61,14 @@ namespace AuctionService.Controllers
             return _mapper.Map<AuctionDto>(auction);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
         {
             
             var auction = _mapper.Map<Auction>(auctionDto);
 
-            //TODO: add current user and as seller
-            auction.Seller = "test";
+            auction.Seller = User.Identity.Name;
 
             _auctionDbContext.Add(auction);
             ///if rabbitmq failed then transaction will be cancalled
@@ -84,6 +85,7 @@ namespace AuctionService.Controllers
 
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<AuctionDto>> UpdateAuction(Guid id, UpdateAuctionDto auctionDto)
         {
@@ -92,7 +94,7 @@ namespace AuctionService.Controllers
 
             if (auction == null) return NotFound();
 
-            //TODO: check seller == username
+            if (auction.Seller != User.Identity.Name) return Forbid();
 
             auction.Item!.Make = auctionDto.make ?? auction.Item.Make;
             auction.Item!.Model = auctionDto.Model ?? auction.Item.Model;
@@ -117,7 +119,7 @@ namespace AuctionService.Controllers
 
             if (auction == null) return NotFound();
 
-            //TODO: check seller == username
+            if (auction.Seller != User.Identity.Name) return Forbid();
 
             _auctionDbContext.Auctions.Remove(auction);
 
