@@ -37,6 +37,11 @@ namespace IdentityService
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<ApplicationUser>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Lax;
+            });
+
             builder.Services.AddAuthentication();
 
             //not implemented
