@@ -17,7 +17,7 @@ namespace IdentityService
                 new ApiScope("auctionApp", "Auction app full access"),
             };
 
-        public static IEnumerable<Client> Clients =>
+        public static IEnumerable<Client> Clients(IConfiguration config) =>
             new Client[]
             {
                 // for developing postman as a client
@@ -30,6 +30,18 @@ namespace IdentityService
                    ClientSecrets = {new Secret("NotASecret".Sha256())},
                    AllowedGrantTypes = { GrantType.ResourceOwnerPassword}
                 },
+                new Client
+                {
+                    ClientId = "nextApp",
+                    ClientName = "nextApp",
+                    ClientSecrets = {new Secret(config["ClientSecret"].Sha256())},
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    RequirePkce = false,
+                    RedirectUris = {config["ClientApp"] + "/api/auth/callback/id-server"},
+                    AllowOfflineAccess = true,
+                    AllowedScopes = {"openid", "profile", "auctionApp"},
+                    AccessTokenLifetime = 3600*24*30
+                }
             };
     }
 }
