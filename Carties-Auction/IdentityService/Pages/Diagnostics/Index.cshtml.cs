@@ -24,6 +24,7 @@ namespace IdentityService.Pages.Diagnostics
 
             if (!localAddresses.Contains(HttpContext.Connection.RemoteIpAddress?.ToString()))
             {
+                Console.WriteLine(HttpContext.Connection.RemoteIpAddress?.ToString());
                 return NotFound();
             }
 
