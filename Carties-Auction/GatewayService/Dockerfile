@@ -10,15 +10,12 @@ COPY GatewayService/GatewayService.csproj GatewayService/
 COPY Contracts/Contracts.csproj Contracts/
 COPY IdentityService/IdentityService.csproj IdentityService/
 
-# Restore package deps
 RUN dotnet restore Carties-Auction.sln
 
-# Copy the app folders over
 COPY GatewayService GatewayService
 WORKDIR /app/GatewayService
 RUN dotnet publish -c Release -o /app/out
 
-# Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
