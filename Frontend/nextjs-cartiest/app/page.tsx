@@ -3,9 +3,9 @@ import Listings from "./auction/Listings";
 
 export default function Home() {
   return (
-    <h3 >
+    <div >
       <Listings/> 
 
-    </h3>
+    </div>
   );
 }
