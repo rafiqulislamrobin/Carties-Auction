@@ -5,8 +5,8 @@ type State = {
     pageSize: number
     pageCount: number
     searchTerm: string
-     searchValue: string
-    // orderBy: string
+    searchValue: string
+    orderBy: string
     // filterBy: string
     // seller?: string
     // winner?: string
@@ -24,7 +24,7 @@ const initialState: State = {
     pageCount: 1,
     searchTerm: '',
     searchValue: '',
-    // orderBy: 'make',
+    orderBy: 'make',
     // filterBy: 'live',
     // seller: undefined,
     // winner: undefined
